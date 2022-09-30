@@ -4,7 +4,7 @@
 
 #define SIZE 4 // Número de Peças por Pino | Tamanho do Pino
 #define NUM 3  // Número de Pinos
-
+#define REGRA_TAMANHO 1 // Pinos de tamanho maior não podem ficar em cima de pinos menores se REGRA_TAMANHO == 1
 
 /* Tipos */
 typedef struct {
@@ -29,6 +29,7 @@ int gerarPinos();
 int moverPeca();
 int checarPecas();
 int checarPinos();
+int checarTamanho();
 
 int jogo();
 int getPinoUsuario();
@@ -57,7 +58,7 @@ int jogo(){
 
     moverPeca(lista_pinos, pino1, pino2);
     mostrarMesa(lista_pinos);
-    
+
     if(checarPinos(lista_pinos)){
         return 1;
     }
@@ -72,6 +73,8 @@ int getPinoUsuario(int pino){
     int isnum = scanf("%d", &entrada);
 
     if(isnum <= 0 || isnum == EOF){
+        fflush(stdin);
+
         printf("\nEntrada Inválida!");
         entrada = getPinoUsuario(pino)+1;
     }
@@ -161,17 +164,33 @@ int gerarPinos(Pino * lista, int numero_de_pinos) {
  return 0;
 }
 
+int checarTamanho(int pino_acima, int pino_abaixo, int pino2_top){
+    if(REGRA_TAMANHO){
+        if(pino2_top > -1 && pino_acima > pino_abaixo){
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
 int moverPeca(Pino * lista, int pin1, int pin2) {
  Pino pino1 = lista[pin1];
  Pino pino2 = lista[pin2];
 
+
  if(pino2->Top < SIZE-1 && pino1->Top >= 0){
-    Push(pino2, pino1->Lista[pino1->Top]);
-    Pop(pino1);
 
-    return 1;
+    if(checarTamanho(pino1->Lista[pino1->Top],
+                     pino2->Lista[pino2->Top],
+                     pino2->Top))
+    {
+        Push(pino2, pino1->Lista[pino1->Top]);
+        Pop(pino1);
+
+        return 1;
+    }
  }
-
  return 0;
 }
 
@@ -182,12 +201,11 @@ int checarPecas(Pino pino, int peca){
         }
     }
     else{
-        printf("\n%d %d", pino->Lista[peca], pino->Lista[peca+1]);
         if(pino->Lista[peca] > pino->Lista[peca+1]){
             return checarPecas(pino, peca+1);
         }
     }
-    
+
     return 0;
 }
 int checarPinos(Pino * lista){
@@ -232,3 +250,4 @@ int mostrarMesa(Pino* lista){
 
     return 1;
 }
+
