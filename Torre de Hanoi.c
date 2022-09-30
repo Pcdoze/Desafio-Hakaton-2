@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE 4 // Número de Peças por Pino | Tamanho do Pino
-#define NUM 3  // Número de Pinos
+#define SIZE 4 // NÃºmero de PeÃ§as por Pino | Tamanho do Pino
+#define NUM 3  // NÃºmero de Pinos
 
 
 /* Tipos */
@@ -15,7 +15,7 @@ typedef struct {
 typedef Pinos * Pino;
 /* Tipos */
 
-/* Métodos */
+/* MÃ©todos */
 int Push();
 int Pop();
 int show();
@@ -27,15 +27,17 @@ int mostrarMesa();
 Pino gerarPino();
 int gerarPinos();
 int moverPeca();
+int checarPecas();
+int checarPinos();
 
 int jogo();
 int getPinoUsuario();
-/* Métodos */
+/* MÃ©todos */
 
-/* Variáveis */
+/* VariÃ¡veis */
 Pino pino;
 Pino * lista_pinos;
-/* Variáveis */
+/* VariÃ¡veis */
 
 int main()
 {
@@ -55,22 +57,26 @@ int jogo(){
 
     moverPeca(lista_pinos, pino1, pino2);
     mostrarMesa(lista_pinos);
+    
+    if(checarPinos(lista_pinos)){
+        return 1;
+    }
 
     jogo();
 }
 
 int getPinoUsuario(int pino){
-    printf("\nDigite o número do Pino %d: ", pino);
+    printf("\nDigite o nÃºmero do Pino %d: ", pino);
 
     int entrada;
     int isnum = scanf("%d", &entrada);
 
     if(isnum <= 0 || isnum == EOF){
-        printf("\nEntrada Inválida!");
+        printf("\nEntrada InvÃ¡lida!");
         entrada = getPinoUsuario(pino)+1;
     }
     else if(entrada <= 0 || entrada > NUM){
-        printf("Pino não Existe!\n");
+        printf("Pino nÃ£o Existe!\n");
         entrada = getPinoUsuario(pino)+1;
     }
 
@@ -167,6 +173,28 @@ int moverPeca(Pino * lista, int pin1, int pin2) {
  }
 
  return 0;
+}
+
+int checarPecas(Pino pino, int peca){
+    if(peca >= (pino->Top)){
+        if(pino->Lista[peca] == 1){
+            return 1;
+        }
+    }
+    else{
+        printf("\n%d %d", pino->Lista[peca], pino->Lista[peca+1]);
+        if(pino->Lista[peca] > pino->Lista[peca+1]){
+            return checarPecas(pino, peca+1);
+        }
+    }
+    
+    return 0;
+}
+int checarPinos(Pino * lista){
+    if(NUM > 1){
+        for(int i = 0; i < NUM; i++)
+            checarPecas(lista[i], 1);
+    }
 }
 
 int mostrarMesa(Pino* lista){
