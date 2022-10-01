@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define SIZE 4 // NÃºmero de PeÃ§as por Pino | Tamanho do Pino
-#define NUM 3  // NÃºmero de Pinos
-#define REGRA_TAMANHO 1 // Pinos de tamanho maior nÃ£o podem ficar em cima de pinos menores se REGRA_TAMANHO == 1
+#define SIZE 4 // Número de Peças por Pino | Tamanho do Pino
+#define NUM 3  // Número de Pinos
+#define REGRA_TAMANHO 1 // Pinos de tamanho maior não podem ficar em cima de pinos menores se REGRA_TAMANHO == 1
 
 /* Tipos */
 typedef struct {
@@ -15,7 +15,7 @@ typedef struct {
 typedef Pinos * Pino;
 /* Tipos */
 
-/* MÃ©todos */
+/* Métodos */
 int Push();
 int Pop();
 int show();
@@ -33,12 +33,12 @@ int checarTamanho();
 
 int jogo();
 int getPinoUsuario();
-/* MÃ©todos */
+/* Métodos */
 
-/* VariÃ¡veis */
+/* Variáveis */
 Pino pino;
 Pino * lista_pinos;
-/* VariÃ¡veis */
+/* Variáveis */
 
 int main()
 {
@@ -67,7 +67,7 @@ int jogo(){
 }
 
 int getPinoUsuario(int pino){
-    printf("\nDigite o nÃºmero do Pino %d: ", pino);
+    printf("\nDigite o número do Pino %d: ", pino);
 
     int entrada;
     int isnum = scanf("%d", &entrada);
@@ -75,11 +75,11 @@ int getPinoUsuario(int pino){
     if(isnum <= 0 || isnum == EOF){
         fflush(stdin);
 
-        printf("\nEntrada InvÃ¡lida!");
+        printf("\nEntrada Inválida!");
         entrada = getPinoUsuario(pino)+1;
     }
     else if(entrada <= 0 || entrada > NUM){
-        printf("Pino nÃ£o Existe!\n");
+        printf("Pino não Existe!\n");
         entrada = getPinoUsuario(pino)+1;
     }
 
@@ -196,7 +196,7 @@ int moverPeca(Pino * lista, int pin1, int pin2) {
 
 int checarPecas(Pino pino, int peca){
     if(peca >= (pino->Top)){
-        if(pino->Lista[peca] == 1){
+        if(pino->Lista[peca] == 1 && peca == SIZE-1){
             return 1;
         }
     }
@@ -211,7 +211,7 @@ int checarPecas(Pino pino, int peca){
 int checarPinos(Pino * lista){
     if(NUM > 1){
         for(int i = 0; i < NUM; i++)
-            checarPecas(lista[i], 1);
+            checarPecas(lista[i], 0);
     }
 }
 
@@ -250,4 +250,3 @@ int mostrarMesa(Pino* lista){
 
     return 1;
 }
-
